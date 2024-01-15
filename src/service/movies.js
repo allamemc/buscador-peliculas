@@ -1,4 +1,4 @@
-const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY = 'f6a0546d';
 
 export const searchMovies = async ({ search }) => {
 	const API = `http://www.omdbapi.com/?apikey=${API_KEY}&s=${search}`;

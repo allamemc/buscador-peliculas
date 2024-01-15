@@ -2,11 +2,22 @@ import { useState } from 'react';
 import { searchMovies } from '../service/movies';
 export function useMovies({ search }) {
 	const [movies, setMovies] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
 
 	const getMovies = async () => {
-		const newMovies = await searchMovies({ search });
-		setMovies(newMovies);
+		try {
+			setLoading(true);
+			setError(null);
+			const newMovies = await searchMovies({ search });
+			setMovies(newMovies);
+			setLoading(false);
+		} catch (error) {
+			setError(error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
-	return { movies, getMovies };
+	return { movies, loading, getMovies };
 }

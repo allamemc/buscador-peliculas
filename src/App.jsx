@@ -1,15 +1,21 @@
+import { useState } from 'react';
 import './App.css';
 import { Movies } from './components/Movies.jsx';
 import { useMovies } from './hooks/useMovies';
 import { useSearch } from './hooks/useSearch';
 
 function App() {
+	const [sort, setSort] = useState(false);
 	const { search, setSearch, error } = useSearch();
-	const { movies, loading, getMovies } = useMovies({ search });
+	const { movies, loading, getMovies } = useMovies({ search, sort });
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		getMovies();
+	};
+
+	const handleSort = () => {
+		setSort(!sort);
 	};
 
 	const handleChange = (event) => {
@@ -31,6 +37,7 @@ function App() {
 							borderColor: error ? 'red' : 'transparent',
 						}}
 					/>
+					<input type='checkbox' onChange={handleSort} checked={sort} />
 					<button type='submit'>Buscar</button>
 				</form>
 				{error && (

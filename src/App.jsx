@@ -1,13 +1,22 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import './App.css';
 import { Movies } from './components/Movies.jsx';
 import { useMovies } from './hooks/useMovies';
 import { useSearch } from './hooks/useSearch';
+import debounce from 'just-debounce-it';
 
 function App() {
 	const [sort, setSort] = useState(false);
 	const { search, setSearch, error } = useSearch();
 	const { movies, loading, getMovies } = useMovies({ search, sort });
+
+	const debouncedGetMovies = useCallback(
+		debounce((search) => {
+			console.log('buscando', search);
+			getMovies({ search });
+		}, 300),
+		[getMovies]
+	);
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -19,7 +28,9 @@ function App() {
 	};
 
 	const handleChange = (event) => {
+		const newSearch = event.target.value;
 		setSearch(event.target.value);
+		debouncedGetMovies(newSearch);
 	};
 
 	return (
